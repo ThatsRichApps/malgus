@@ -132,9 +132,10 @@ class Seller(Action):
 
         # Add here, monitor to see if executed?
         
-        self.position.sell_price = price['ask']        
+        self.position.sell_price = float(price['ask'])        
         self.position.time = self.data.virtual_time
-        print ("Sell:", self.position.qty, "of", self.position.ticker, "at", price['ask'], "at", self.position.time)
+        self.position.usd = self.position.sell_price * self.position.qty
+        print ("Sell:", self.position.qty, "of", self.position.ticker, "at", price['ask'], "at", self.position.time, "generates", self.position.usd)
         
         # Log the sell in Logger
         self.log.addTrade("sell", self.position)
@@ -143,7 +144,7 @@ class Seller(Action):
         # Add here, monitor to see if executed
         if (self.data.do_trade):
             # If we made a read trade, sleep 
-            # 1 day - 86400, 4H - 21600
+            # 1 day - 86400, 6H - 21600
             time.sleep(21600)
         
         

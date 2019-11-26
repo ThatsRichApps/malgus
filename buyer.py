@@ -127,7 +127,7 @@ class Buyer(Action):
                 # set qty to 0
                 loopIt = False
         
-        self.position.buy_price = price['bid']        
+        self.position.buy_price = float(price['bid'])        
         self.position.time = self.data.virtual_time
         print ("BUY:", self.position.qty, "of", self.position.ticker, "at", price['bid'], "at", self.position.time)
         
@@ -137,7 +137,7 @@ class Buyer(Action):
         # Add here, monitor to see if executed?
         if (self.data.do_trade):
             # If we made a read trade, sleep 
-            # 1 day - 86400, 4H - 21600
-            time.sleep(21600)
+            # 1 day - 86400, 6H - 21600
+            time.sleep(43200)
         
             

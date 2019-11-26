@@ -68,13 +68,15 @@ class Malgus(object):
         if (buy_or_sell == 1):
             #print ('Buy', self.ticker)
             buy_cash = float (input('Dollar amount to purchase?'))
-            self.position.usd = buy_cash
+            self.position.usd = float(buy_cash)
             action = Listener(self.data, self.position, self.log, self.model)
         
         elif (buy_or_sell == 2):
             #print ('Sell', self.ticker)
             sell_qty = float (input('What qty of coin to sell?'))
-            self.position.qty = sell_qty
+            self.position.qty = float(sell_qty)
+            buy_price = float (input('What was your buy price (for stoploss det)?'))
+            self.position.buy_price = float(buy_price)
             action = Monitor(self.data, self.position, self.log, self.model)
 
         else:

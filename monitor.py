@@ -33,31 +33,30 @@ class Monitor(Action):
         
         sell_trigger = False
         
+        stoploss = 0.15
+        print ('stoploss is:', (self.position.buy_price * (1-stoploss)))
+        
         while not (sell_trigger):
         
             prediction = self.model.predict()[0]
-            print ('Waiting for sell signal, recc:', prediction)
+            
+            price  = self.data.getTimePrice()        
+
+            try:
+                spotprice = float(price['price'])
+            except:
+                print ('returned error, sleep and try again')
+                time.sleep(10)
+                continue
+
+            print ('Price:', spotprice, ', Waiting for sell signal, current prediction:', prediction, 'at', self.data.virtual_time)
         
             if (prediction == 2):
                 print ('Trigger sell')
                 sell_trigger = True
                 continue
-            
+
             # also check to see if we have passed a stoploss:
-            # 4%?
-            stoploss = 0.20
-            price  = self.data.getTimePrice()        
-
-            try:
-                spotprice = float(price['price'])
-                print ('Price:', spotprice)
-
-            except:
-                print ('returned error, sleep and try again')
-                time.sleep(10)
-                continue
-            
-
             if (spotprice < (self.position.buy_price * (1-stoploss))):
                 print ('hit stoploss,', spotprice, ' is below stoploss for', self.position.buy_price)
                 sell_trigger = True
@@ -65,11 +64,8 @@ class Monitor(Action):
             
             # Wait a set number of seconds
             if (self.data.live_data):
-            
                 time.sleep(self.query_interval_secs)
-
             else: 
-            
                 #increment virtual time to simulate a wait
                 self.data.virtual_time = self.data.virtual_time + timedelta(seconds=self.query_interval_secs)
     

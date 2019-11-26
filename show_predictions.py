@@ -41,8 +41,8 @@ if __name__ == '__main__':
     #granularity = 21600 # in seconds; 86400 = 1 Day
     #num_points = 728 #728 = 6 mos, w 6H int
     
-    granularity = 3600 # in seconds; 86400 = 1 Day
-    num_points = 480 # try to make it 180 days
+    granularity = 300 # in seconds; 86400 = 1 Day
+    num_points = 160000 # try to make it 180 days
     
     duration = granularity * num_points
     end_time = start_time + timedelta(seconds=duration)
@@ -70,6 +70,8 @@ if __name__ == '__main__':
     compound_gain = 1
     num_sales = 0
     gain_sum = 0
+    
+    '''
 
     model = Model(all_data)
     model.fit()
@@ -88,9 +90,12 @@ if __name__ == '__main__':
         target_df.at[time, 'target'] = prediction
     
     #print (target_df.tail(10))
-        
+       
+    '''
+    
     # then merge target and range_df
-    new_df = pd.concat([range_df,target_df], axis=1)
+    #new_df = pd.concat([range_df,target_df], axis=1)
+    new_df = range_df
     
     print ('new_df:', new_df.tail(20))
 

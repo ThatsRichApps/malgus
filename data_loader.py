@@ -129,7 +129,14 @@ class DataLoader(object):
             #start_pad = start - timedelta(seconds=pad)
             
             # need a try catch block here with delay retry
-            history = self.trade_client.get_product_historic_rates(self.ticker, start, end, granularity=granularity)
+            try:
+                history = self.trade_client.get_product_historic_rates(self.ticker, start, end, granularity=granularity)
+            except:
+                # now what?  retry or reconnect?
+                print ('error with trade client, sleep 300s and try to reconnect')
+                time.sleep(300)
+                self.trade_client = cbpro.AuthenticatedClient(self.login.key, self.login.b64secret, self.login.passphrase)
+                history = self.trade_client.get_product_historic_rates(self.ticker, start, end, granularity=granularity)
             
             history_df = pd.DataFrame.from_records(history,  columns = ['time', 'low', 'high', 'open', 'close', 'volume'])
     
@@ -155,7 +162,7 @@ class DataLoader(object):
             #history_df = self.file_data.data[start:end].copy()
             
             # pad start and end value so that we can get agg of range
-            pad = granularity * 2
+            pad = granularity * 3
             start_pad = start - timedelta(seconds=pad)
             history_df = self.file_data.data[start_pad:end].copy()
             
@@ -433,7 +440,7 @@ class DataLoader(object):
         
         for gran in granularity:
         
-            duration = gran * num_points
+            duration = gran * (num_points + 1)
             start_time = time - timedelta(seconds=duration)
             
             history_df = self.getHistoryRangeClose(start_time, time, gran, num_points)

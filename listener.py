@@ -7,6 +7,7 @@ Created on Sep 10, 2019
 from action import Action
 import time
 from datetime import timedelta
+#import pytz
 
 class Listener(Action):
     '''
@@ -31,7 +32,7 @@ class Listener(Action):
         if prediction is 'buy' then move to buy action
         '''
         print ('Listen action, wait for buy trigger')
-        
+        #WST = pytz.timezone('US/Mountain')
         
         buy_trigger = False
         
